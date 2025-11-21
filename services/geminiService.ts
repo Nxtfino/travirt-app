@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Assume process.env.API_KEY is available in the environment
 const API_KEY = process.env.API_KEY;
