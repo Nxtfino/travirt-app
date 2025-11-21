@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { createChart, ColorType, CrosshairMode, IChartApi, ISeriesApi, Time, CandlestickData, HistogramData } from 'lightweight-charts';
-import { Stock, InstrumentType, Candle } from '../../types';
+import type { Stock, InstrumentType, Candle } from '../../types';
 import { formatCurrency, formatPercent } from '../../utils/formatters';
 
 interface ChartPanelProps {
