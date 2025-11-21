@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TraVirt - Virtual Trading Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              // NXTFINO Dark Mode Palette
+              'base': '#0B1B3F',      // Deep Navy Background
+              'surface': '#142952',    // Slightly lighter navy for cards
+              'overlay': '#1E3A8A',    // A slightly bluer overlay for hover
+              'muted': '#93C5FD',      // Light blue for muted text
+              'subtle': '#60A5FA',      // Brighter blue for subtle elements
+              'text-primary': '#FFFFFF',   // White Text
+              'text-secondary': '#DBEAFE', // Off-white secondary text
+              'primary': '#007BFF',    // Electric Blue
+              'primary-focus': '#0056b3', // Darker blue for focus
+              'accent': '#8A2BE2',     // Blue-Purple Accent
+              'success': '#10B981',    // Kept for positive P&L
+              'danger': '#EF4444',     // Kept for negative P&L
+              'orange': '#F97316',
+
+              // NXTFINO Light Mode Palette
+              'light-bg': '#F3F5F9',
+              'light-text': '#0B1B3F',
+              'light-card': '#FFFFFF',
+            },
+            fontFamily: {
+              sans: ['"Orbitron"', 'Rajdhani', 'Exo 2', 'sans-serif'],
+            },
+            backgroundImage: {
+              'nxtfino-gradient': 'linear-gradient(90deg, #007BFF 0%, #8A2BE2 100%)',
+            },
+            boxShadow: {
+              'glow-blue': '0 0 10px rgba(0, 123, 255, 0.6)',
+              'glow-purple': '0 0 12px rgba(138, 43, 226, 0.6)',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.3s ease-out',
+              'spin-slow': 'spin 3s linear infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: 0, transform: 'translateY(-10px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
+              spin: {
+                from: { transform: 'rotate(0deg)' },
+                to: { transform: 'rotate(360deg)' },
+              },
+            }
+          },
+        },
+      }
+    </script>
+     <style>
+      /* Custom Scrollbar for Webkit browsers (Chrome, Safari) */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #142952; /* surface color */
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #1E3A8A; /* overlay color */
+        border-radius: 4px;
+        border: 2px solid #142952; /* applies padding around the thumb */
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #60A5FA; /* subtle color */
+      }
+
+      /* Custom Scrollbar for Firefox */
+      .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #1E3A8A #142952; /* thumb color track color */
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
+    "lightweight-charts": "https://esm.sh/lightweight-charts@4.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="dark bg-base">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
