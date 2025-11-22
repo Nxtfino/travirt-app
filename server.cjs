@@ -1,13 +1,30 @@
-// CJS VERSION – Works on Render with .cjs extension
+// ------------------------------------------
+// HTTP SERVER (REQUIRED BY RENDER TO AVOID TIMEOUT)
+// ------------------------------------------
+const http = require("http");
 
+const HTTP_PORT = process.env.PORT || 10000;
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end("OK - Travirt WebSocket Server Running");
+});
+
+server.listen(HTTP_PORT, () => {
+  console.log(`🌐 HTTP Health Server running on port ${HTTP_PORT}`);
+});
+
+// ------------------------------------------
+// WEBSOCKET BROADCAST SERVER
+// ------------------------------------------
 const WebSocket = require("ws");
 const { WebSocketServer } = require("ws");
 
-const PORT = process.env.PORT || 8080;
+// Run WebSocket on a different port (Render only checks HTTP port)
+const WS_PORT = 10001;
 
-const wss = new WebSocketServer({ port: PORT });
-
-console.log(`🚀 Backend Broadcasting Server running on port ${PORT}`);
+const wss = new WebSocketServer({ port: WS_PORT });
+console.log(`🚀 WebSocket Broadcast Server running on port ${WS_PORT}`);
 
 const SYMBOLS = [
   { symbol: "NIFTY 50", price: 25910.05 },
@@ -33,6 +50,7 @@ wss.on("connection", (ws) => {
   });
 });
 
+// Broadcast fake market ticks
 setInterval(() => {
   if (clients.size === 0) return;
 
@@ -42,7 +60,7 @@ setInterval(() => {
 
     return {
       symbol: s.symbol,
-      ltp: s.price,
+      ltp: s.price.toFixed(2),
       change: move.toFixed(2),
       percentChange: ((move / s.price) * 100).toFixed(2),
       high: (s.price * 1.01).toFixed(2),
@@ -60,5 +78,3 @@ setInterval(() => {
     }
   }
 }, 1000);
-
-module.exports = {};
