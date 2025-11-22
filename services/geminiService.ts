@@ -6,7 +6,7 @@ if (!API_KEY) {
   console.warn("Gemini API key not found. AI features will be disabled.");
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const ai = new GoogleGenerativeAI(API_KEY!);
 
 export const summarizeNews = async (headlines: string[]): Promise<string> => {
   if (!API_KEY) {
@@ -14,23 +14,20 @@ export const summarizeNews = async (headlines: string[]): Promise<string> => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash"
-    });
-
     const prompt = `
-      You are a financial market analyst. Summarize these market news headlines
-      into one concise insight for a retail trader:
-
+      Summarize these headlines for a retail Indian trader:
       - ${headlines.join("\n- ")}
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
+    // Works with your installed SDK version
+    const result = await ai.generateText({
+      model: "gemini-2.0-flash",
+      prompt,
+    });
 
-    return response;
+    return result.text();
   } catch (error) {
-    console.error("Gemini summarize error:", error);
+    console.error("Gemini error:", error);
     return "Could not generate summary.";
   }
 };
