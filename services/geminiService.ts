@@ -1,31 +1,30 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
-  console.warn("Gemini API key missing. AI functions disabled.");
+  console.warn("⚠️ Gemini API Key not found. AI features disabled.");
 }
 
-const ai = new GoogleGenerativeAI({
-  apiKey: API_KEY!,
-});
+const genAI = new GoogleGenerativeAI(API_KEY!);
+
+// Pre-load model
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export const summarizeNews = async (headlines: string[]): Promise<string> => {
-  if (!API_KEY) {
-    return "Gemini API key missing.";
-  }
+  if (!API_KEY) return "Gemini API key missing.";
 
   try {
-    const prompt = `Summarize these stock market headlines:\n\n- ${headlines.join("\n- ")}`;
+    const prompt = `
+      Summarize these stock market headlines for an Indian retail trader:
+      - ${headlines.join("\n- ")}
+    `;
 
-    const result = await ai.generateText({
-      model: "gemini-1.5-flash",
-      prompt,
-    });
+    const result = await model.generateContent(prompt);
 
     return result.response.text();
-  } catch (err) {
-    console.error("Gemini Error:", err);
-    return "Error summarizing headlines.";
+  } catch (error) {
+    console.error("Gemini Error:", error);
+    return "Could not generate summary.";
   }
 };

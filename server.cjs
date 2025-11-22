@@ -1,4 +1,7 @@
-import WebSocket, { WebSocketServer } from "ws";
+// CJS VERSION – Works on Render with .cjs extension
+
+const WebSocket = require("ws");
+const { WebSocketServer } = require("ws");
 
 const PORT = process.env.PORT || 8080;
 
@@ -40,10 +43,10 @@ setInterval(() => {
     return {
       symbol: s.symbol,
       ltp: s.price,
-      change: move,
-      percentChange: (move / s.price) * 100,
-      high: s.price * 1.01,
-      low: s.price * 0.99,
+      change: move.toFixed(2),
+      percentChange: ((move / s.price) * 100).toFixed(2),
+      high: (s.price * 1.01).toFixed(2),
+      low: (s.price * 0.99).toFixed(2),
       volume: Math.floor(Math.random() * 1000),
       timestamp: Date.now(),
     };
@@ -57,3 +60,5 @@ setInterval(() => {
     }
   }
 }, 1000);
+
+module.exports = {};
