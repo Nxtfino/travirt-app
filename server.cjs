@@ -1,30 +1,42 @@
-// ------------------------------------------
-// HTTP SERVER (REQUIRED BY RENDER TO AVOID TIMEOUT)
-// ------------------------------------------
-const http = require("http");
+// =============================
+// CJS VERSION FOR RENDER
+// Works with Node 18+
+// =============================
 
-const HTTP_PORT = process.env.PORT || 10000;
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end("OK - Travirt WebSocket Server Running");
-});
-
-server.listen(HTTP_PORT, () => {
-  console.log(`🌐 HTTP Health Server running on port ${HTTP_PORT}`);
-});
-
-// ------------------------------------------
-// WEBSOCKET BROADCAST SERVER
-// ------------------------------------------
+// WebSocket (CJS import)
 const WebSocket = require("ws");
 const { WebSocketServer } = require("ws");
 
-// Run WebSocket on a different port (Render only checks HTTP port)
-const WS_PORT = 10001;
+// HTTP server for Render health checks
+const http = require("http");
 
-const wss = new WebSocketServer({ port: WS_PORT });
-console.log(`🚀 WebSocket Broadcast Server running on port ${WS_PORT}`);
+// Render forces dynamic port from environment
+const PORT = process.env.PORT || 10000;
+
+console.log(`🚀 Backend Broadcasting Server starting on port ${PORT}...`);
+
+// Create REQUIRED HTTP Server for Render health check
+const server = http.createServer((req, res) => {
+  if (req.url === "/health") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    return res.end("OK");
+  }
+
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("WS server running");
+});
+
+// Create WebSocket server attached to HTTP server
+const wss = new WebSocketServer({ server });
+
+// Start HTTP server
+server.listen(PORT, () => {
+  console.log(`🌐 HTTP + WebSocket server live on ${PORT}`);
+});
+
+// =============================
+//  🔔 STOCK MARKET TICK STREAM
+// =============================
 
 const SYMBOLS = [
   { symbol: "NIFTY 50", price: 25910.05 },
@@ -40,17 +52,18 @@ const SYMBOLS = [
 
 const clients = new Set();
 
+// On client connect
 wss.on("connection", (ws) => {
-  console.log("Client connected");
+  console.log("🔥 Client connected");
   clients.add(ws);
 
   ws.on("close", () => {
-    console.log("Client disconnected");
+    console.log("❌ Client disconnected");
     clients.delete(ws);
   });
 });
 
-// Broadcast fake market ticks
+// Send market ticks every 1s
 setInterval(() => {
   if (clients.size === 0) return;
 
@@ -60,11 +73,11 @@ setInterval(() => {
 
     return {
       symbol: s.symbol,
-      ltp: s.price.toFixed(2),
-      change: move.toFixed(2),
-      percentChange: ((move / s.price) * 100).toFixed(2),
-      high: (s.price * 1.01).toFixed(2),
-      low: (s.price * 0.99).toFixed(2),
+      ltp: Number(s.price.toFixed(2)),
+      change: Number(move.toFixed(2)),
+      percentChange: Number(((move / s.price) * 100).toFixed(2)),
+      high: Number((s.price * 1.01).toFixed(2)),
+      low: Number((s.price * 0.99).toFixed(2)),
       volume: Math.floor(Math.random() * 1000),
       timestamp: Date.now(),
     };
@@ -72,9 +85,9 @@ setInterval(() => {
 
   const payload = JSON.stringify(ticks);
 
-  for (const c of clients) {
-    if (c.readyState === WebSocket.OPEN) {
-      c.send(payload);
+  for (const client of clients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(payload);
     }
   }
 }, 1000);
